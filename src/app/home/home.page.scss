@@ -6,6 +6,7 @@
   right: 0;
   top: 50%;
   transform: translateY(-50%);
+  padding: 0 20px;
 }
 
 #container strong {
@@ -20,8 +21,13 @@
   color: #8c8c8c;
 
   margin: 0;
+  margin-bottom: 20px;
 }
 
 #container a {
   text-decoration: none;
+}
+
+ion-button {
+  margin-top: 20px;
 }

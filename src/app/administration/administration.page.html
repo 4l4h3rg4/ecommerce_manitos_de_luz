@@ -1,0 +1,103 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Administración</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="resetForm()" *ngIf="isEditing">
+        <ion-icon name="close" slot="start"></ion-icon>
+        Cancelar
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <!-- Formulario de producto -->
+  <form [formGroup]="productForm" (ngSubmit)="saveProduct()">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>
+          {{ isEditing ? 'Editar Producto' : 'Nuevo Producto' }}
+        </ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <ion-item>
+          <ion-label position="floating">Nombre</ion-label>
+          <ion-input formControlName="name" type="text"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Precio</ion-label>
+          <ion-input formControlName="price" type="number" min="0"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Descripción</ion-label>
+          <ion-textarea formControlName="description" rows="3"></ion-textarea>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Imagen del producto</ion-label>
+          <div class="image-upload-container">
+            <img [src]="previewImage || productForm.get('image_url')?.value" 
+                 *ngIf="previewImage || productForm.get('image_url')?.value"
+                 class="preview-image">
+            
+            <ion-button (click)="fileInput.click()" expand="block" fill="outline">
+              <ion-icon name="image" slot="start"></ion-icon>
+              Seleccionar imagen
+            </ion-button>
+            <input #fileInput 
+                   type="file" 
+                   (change)="onFileSelected($event)"
+                   accept="image/*" 
+                   style="display: none">
+          </div>
+        </ion-item>
+        
+        <ion-item>
+          <ion-label position="floating">Stock</ion-label>
+          <ion-input formControlName="stock" type="number" min="0"></ion-input>
+        </ion-item>
+
+        <ion-button 
+          expand="block" 
+          type="submit" 
+          class="ion-margin-top"
+          [disabled]="!productForm.valid">
+          {{ isEditing ? 'Actualizar' : 'Guardar' }}
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </form>
+
+  <!-- Lista de productos -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Productos</ion-card-title>
+    </ion-card-header>
+
+    <ion-list>
+      <ion-item *ngFor="let product of products">
+        <ion-thumbnail slot="start" *ngIf="product.image_url">
+          <img [src]="product.image_url" />
+        </ion-thumbnail>
+        
+        <ion-label>
+          <h2>{{ product.name }}</h2>
+          <p>{{ product.price | currency:'USD':'symbol':'1.0-2' }}</p>
+          <p>Stock: {{ product.stock }}</p>
+        </ion-label>
+
+        <ion-buttons slot="end">
+          <ion-button (click)="editProduct(product)" color="primary">
+            <ion-icon slot="icon-only" name="create"></ion-icon>
+          </ion-button>
+          <ion-button (click)="deleteProduct(product.id)" color="danger">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-item>
+    </ion-list>
+  </ion-card>
+</ion-content>

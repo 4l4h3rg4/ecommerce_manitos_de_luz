@@ -1,0 +1,31 @@
+ion-thumbnail {
+  --size: 80px;
+  
+  img {
+    border-radius: 8px;
+  }
+}
+
+ion-card {
+  margin-bottom: 20px;
+}
+
+.error-message {
+  color: var(--ion-color-danger);
+  font-size: 0.8em;
+  margin: 8px 0;
+}
+
+//estilos upload image
+.image-upload-container {
+    width: 100%;
+    padding: 10px 0;
+  
+    .preview-image {
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      margin-bottom: 10px;
+      border-radius: 8px;
+    }
+  }
