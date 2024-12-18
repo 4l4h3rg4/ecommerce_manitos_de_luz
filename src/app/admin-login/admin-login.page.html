@@ -1,0 +1,59 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Acceso Administrador</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="login-container">
+    <div class="login-box">
+      <h2>Panel de Administración</h2>
+      
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <ion-item>
+          <ion-label position="floating">
+            <ion-icon name="mail-outline"></ion-icon> Email
+          </ion-label>
+          <ion-input 
+            type="email" 
+            formControlName="email"
+            autocomplete="email">
+          </ion-input>
+        </ion-item>
+        
+        <ion-item>
+          <ion-label position="floating">
+            <ion-icon name="lock-closed-outline"></ion-icon> Contraseña
+          </ion-label>
+          <ion-input 
+            [type]="showPassword ? 'text' : 'password'" 
+            formControlName="password">
+          </ion-input>
+          <ion-button 
+            fill="clear" 
+            slot="end" 
+            (click)="togglePassword()">
+            <ion-icon [name]="showPassword ? 'eye-off' : 'eye'"></ion-icon>
+          </ion-button>
+        </ion-item>
+
+        <div class="error-message" *ngIf="errorMessage">
+          <ion-icon name="alert-circle"></ion-icon>
+          {{ errorMessage }}
+        </div>
+
+        <div class="loading-spinner" *ngIf="isLoading">
+          <ion-spinner></ion-spinner>
+        </div>
+
+        <ion-button 
+          expand="block" 
+          type="submit" 
+          [disabled]="!loginForm.valid || isLoading">
+          <ion-icon name="log-in-outline" slot="start"></ion-icon>
+          Iniciar Sesión
+        </ion-button>
+      </form>
+    </div>
+  </div>
+</ion-content>

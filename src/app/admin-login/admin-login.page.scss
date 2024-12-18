@@ -1,0 +1,59 @@
+.login-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px;
+    background: var(--ion-color-dark);
+    
+    .login-box {
+      background: var(--ion-color-dark-tint);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      
+      h2 {
+        color: var(--ion-color-light);
+        text-align: center;
+        margin-bottom: 20px;
+      }
+    }
+  
+    ion-item {
+      --background: var(--ion-color-dark-shade);
+      --border-radius: 5px;
+      margin-bottom: 15px;
+      
+      ion-label {
+        color: var(--ion-color-light);
+      }
+      
+      ion-input {
+        color: var(--ion-color-light);
+        --padding-start: 10px;
+      }
+    }
+  
+    .error-message {
+      color: var(--ion-color-danger);
+      text-align: center;
+      margin: 10px 0;
+      font-size: 0.9em;
+    }
+  
+    ion-button {
+      margin-top: 20px;
+      --background: var(--ion-color-primary);
+      --border-radius: 5px;
+      
+      &:hover {
+        --background: var(--ion-color-primary-shade);
+      }
+    }
+  }
+  
+  .loading-spinner {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0;
+  }

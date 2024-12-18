@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { SupabaseService } from './services/supabase.service';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,7 @@ import { Component } from '@angular/core';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor() {}
+  constructor(private supabaseService: SupabaseService) {
+    // No inicializamos auth aquí
+  }
 }

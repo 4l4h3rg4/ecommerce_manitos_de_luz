@@ -32,7 +32,11 @@
               }
             ],
             "styles": ["src/global.scss", "src/theme/variables.scss"],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "ws",
+              "@supabase/realtime-js"
+            ]
           },
           "configurations": {
             "production": {

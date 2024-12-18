@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LoadingController, NavController } from '@ionic/angular';
 import { SupabaseService } from '../services/supabase.service';
+import { Product } from '../interfaces/product.interface';
 
 @Component({
   selector: 'app-product',
@@ -9,20 +10,20 @@ import { SupabaseService } from '../services/supabase.service';
   styleUrls: ['./product.page.scss'],
 })
 export class ProductPage implements OnInit {
-  product: any = null;
+  product: Product | null = null;
   error: string | null = null;
 
   constructor(
+    public supabaseService: SupabaseService,
     private route: ActivatedRoute,
-    private supabaseService: SupabaseService,
     private loadingCtrl: LoadingController,
     private navCtrl: NavController
   ) { }
 
   async ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
+    const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id) {
-      await this.loadProduct(parseInt(id));
+      await this.loadProduct(id);
     }
   }
 
@@ -33,7 +34,7 @@ export class ProductPage implements OnInit {
     await loading.present();
 
     try {
-      const { data, error } = await this.supabaseService.getProductById(id);
+      const { data, error } = await this.supabaseService.getProductById(id.toString());
       if (error) throw error;
       
       if (!data || data.length === 0) {
@@ -54,7 +55,15 @@ export class ProductPage implements OnInit {
   }
 
   async buyProduct() {
+    if (!this.product) return;
     // Aquí irá la integración con Mercado Pago
     console.log('Comprando producto:', this.product.id);
+  }
+
+  handleImageError(event: Event) {
+    const img = event.target as HTMLImageElement;
+    if (img) {
+      img.src = 'assets/default-product.png';
+    }
   }
 }

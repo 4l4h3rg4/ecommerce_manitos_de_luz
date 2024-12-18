@@ -36,22 +36,36 @@
           <ion-textarea formControlName="description" rows="3"></ion-textarea>
         </ion-item>
 
-        <ion-item>
-          <ion-label position="stacked">Imagen del producto</ion-label>
-          <div class="image-upload-container">
-            <img [src]="previewImage || productForm.get('image_url')?.value" 
-                 *ngIf="previewImage || productForm.get('image_url')?.value"
-                 class="preview-image">
+        <ion-item lines="none" class="image-upload-container">
+          <div class="upload-area">
+            <input
+              type="file"
+              #fileInput
+              accept="image/*"
+              (change)="onFileSelected($event)"
+              [attr.disabled]="isUploading ? '' : null"
+              style="display: none"
+            >
             
-            <ion-button (click)="fileInput.click()" expand="block" fill="outline">
-              <ion-icon name="image" slot="start"></ion-icon>
-              Seleccionar imagen
-            </ion-button>
-            <input #fileInput 
-                   type="file" 
-                   (change)="onFileSelected($event)"
-                   accept="image/*" 
-                   style="display: none">
+            <div class="preview-container" (click)="fileInput.click()">
+              <ng-container *ngIf="previewImage || productForm.get('image_url')?.value; else uploadPrompt">
+                <img [src]="previewImage || supabaseService.getProductImageUrl(productForm.get('image_url')?.value ?? '')" 
+                     alt="Preview" 
+                     class="preview-image">
+                <div class="overlay">
+                  <ion-icon name="camera"></ion-icon>
+                  <span>Cambiar imagen</span>
+                </div>
+              </ng-container>
+              
+              <ng-template #uploadPrompt>
+                <div class="upload-prompt">
+                  <ion-icon name="cloud-upload"></ion-icon>
+                  <span>Subir imagen</span>
+                  <small>Tamaño máximo: 2MB</small>
+                </div>
+              </ng-template>
+            </div>
           </div>
         </ion-item>
         
@@ -79,21 +93,23 @@
 
     <ion-list>
       <ion-item *ngFor="let product of products">
-        <ion-thumbnail slot="start" *ngIf="product.image_url">
-          <img [src]="product.image_url" />
+        <ion-thumbnail slot="start">
+          <img [src]="supabaseService.getProductImageUrl(product.image_url ?? '')" 
+               [alt]="product.name"
+               (error)="handleImageError($event)"
+               (load)="onImageLoad(product.name)">
         </ion-thumbnail>
         
         <ion-label>
           <h2>{{ product.name }}</h2>
-          <p>{{ product.price | currency:'USD':'symbol':'1.0-2' }}</p>
-          <p>Stock: {{ product.stock }}</p>
+          <p>Image URL: {{ product.image_url }}</p>
         </ion-label>
 
         <ion-buttons slot="end">
           <ion-button (click)="editProduct(product)" color="primary">
             <ion-icon slot="icon-only" name="create"></ion-icon>
           </ion-button>
-          <ion-button (click)="deleteProduct(product.id)" color="danger">
+          <ion-button (click)="deleteProduct(product.id!)" color="danger">
             <ion-icon slot="icon-only" name="trash"></ion-icon>
           </ion-button>
         </ion-buttons>

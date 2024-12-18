@@ -17,11 +17,11 @@
 
   <!-- Detalles del producto -->
   <div *ngIf="product && !error" class="product-container">
-    <ion-img 
-      [src]="product.image_url" 
-      class="product-image"
-      *ngIf="product.image_url">
-    </ion-img>
+    <img 
+      [src]="supabaseService.getProductImageUrl(product.image_url ?? '')"
+      [alt]="product.name"
+      (error)="handleImageError($event)"
+    />
 
     <div class="product-details ion-padding">
       <h1>{{ product.name }}</h1>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SupabaseService } from '../services/supabase.service';
+import { Product } from '../interfaces/product.interface';
 import { LoadingController } from '@ionic/angular';
 
 @Component({
@@ -8,12 +9,12 @@ import { LoadingController } from '@ionic/angular';
   styleUrls: ['./product-catalog.page.scss'],
 })
 export class ProductCatalogPage implements OnInit {
-  products: any[] = [];
+  products: Product[] = [];
   loading = false;
   error: string | null = null;
 
   constructor(
-    private supabaseService: SupabaseService,
+    public supabaseService: SupabaseService,
     private loadingCtrl: LoadingController
   ) { }
 
@@ -33,13 +34,22 @@ export class ProductCatalogPage implements OnInit {
     await loading.present();
 
     try {
-      const { data, error } = await this.supabaseService.getProducts();
-      if (error) throw error;
-      this.products = data;
-    } catch (error: any) {
-      this.error = error.message;
+      this.products = await this.supabaseService.getProducts();
+    } catch (error) {
+      console.error('Error al cargar productos:', error);
     } finally {
       loading.dismiss();
     }
+  }
+
+  handleImageError(event: Event) {
+    const img = event.target as HTMLImageElement;
+    if (img) {
+      img.src = 'assets/default-product.png';
+    }
+  }
+
+  trackByFn(index: number, product: Product) {
+    return product.id;
   }
 }

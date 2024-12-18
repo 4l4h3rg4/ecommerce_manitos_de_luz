@@ -20,9 +20,18 @@
   <!-- Grid de productos -->
   <ion-grid>
     <ion-row>
-      <ion-col size="12" size-sm="6" size-md="4" size-lg="3" *ngFor="let product of products">
+      <ion-col 
+        size="12" 
+        size-sm="6" 
+        size-md="4" 
+        size-lg="3" 
+        *ngFor="let product of products; trackBy: trackByFn">
         <ion-card [routerLink]="['/product', product.id]">
-          <img [src]="product.image_url" *ngIf="product.image_url" />
+          <img 
+            [src]="supabaseService.getProductImageUrl(product.image_url ?? '')" 
+            [alt]="product.name"
+            (error)="handleImageError($event)"
+          />
           <ion-card-header>
             <ion-card-title>{{ product.name }}</ion-card-title>
             <ion-card-subtitle>{{ product.price | currency:'USD':'symbol':'1.0-2' }}</ion-card-subtitle>
