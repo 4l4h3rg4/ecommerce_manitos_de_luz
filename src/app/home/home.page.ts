@@ -30,4 +30,8 @@ export class HomePage implements OnInit {
       console.error('Error al cargar productos:', error);
     }
   }
+  
+  addToCart(product: Product) {
+    console.log('Producto añadido al carrito:', product);
+  }
 } 

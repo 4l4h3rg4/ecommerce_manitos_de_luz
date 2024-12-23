@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalle del Producto</title>
+</head>
+<body>
+  <div class="container">
+    <a href="/product-catalog" class="back-link"><i class="arrow-left"></i> Volver a la tienda</a>
+    <div *ngIf="error" class="error-message">{{ error }}</div>
+    <div *ngIf="!error">
+      <img [src]="product.image_url" alt="{{ product.name }}" class="product-image" />
+      <h1 class="product-name">{{ product.name }}</h1>
+      <div class="product-price">${{ product.price }}</div>
+      <p class="product-description">{{ product.description }}</p>
+      <button class="add-to-cart" (click)="addToCart(product)">Añadir al carrito</button>
+      <div class="promotions">
+        <p><i class="truck-icon"></i> Envío gratuito en pedidos superiores a $50</p>
+        <p><i class="gift-icon"></i> Regalo sorpresa en compras navideñas</p>
+      </div>
+      <div class="benefits">
+        <div class="benefit">
+          <i class="check-icon"></i>
+          <span>100% Seguro: productos veganos y libres de crueldad.</span>
+        </div>
+        <div class="benefit">
+          <i class="check-icon"></i>
+          <span>Calidad Premium: ingredientes de alta calidad.</span>
+        </div>
+        <div class="benefit">
+          <i class="check-icon"></i>
+          <span>Clientes Satisfechos: miles de reseñas positivas.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

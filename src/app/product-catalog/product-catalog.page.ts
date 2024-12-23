@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SupabaseService } from '../services/supabase.service';
 import { Product } from '../interfaces/product.interface';
 import { LoadingController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-catalog',
@@ -15,7 +16,8 @@ export class ProductCatalogPage implements OnInit {
 
   constructor(
     public supabaseService: SupabaseService,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private router: Router
   ) { }
 
   async ngOnInit() {
@@ -37,9 +39,14 @@ export class ProductCatalogPage implements OnInit {
       this.products = await this.supabaseService.getProducts();
     } catch (error) {
       console.error('Error al cargar productos:', error);
+      this.error = 'Error al cargar productos';
     } finally {
       loading.dismiss();
     }
+  }
+
+  addToCart(product: Product) {
+    console.log('Producto añadido al carrito:', product);
   }
 
   handleImageError(event: Event) {
@@ -51,5 +58,9 @@ export class ProductCatalogPage implements OnInit {
 
   trackByFn(index: number, product: Product) {
     return product.id;
+  }
+
+  goToProductDetails(productName: string) {
+    this.router.navigate(['/products', productName]);
   }
 }

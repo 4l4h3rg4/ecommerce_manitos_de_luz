@@ -1,20 +1,51 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Inicio
+      <span class="logo">VeganHair<span class="navidad">Navidad</span></span>
     </ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/">Inicio</ion-button>
+      <ion-button routerLink="/products">Productos</ion-button>
+      <ion-button routerLink="/cart">Carrito</ion-button>
+      <ion-button routerLink="/contact">Contacto</ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <div id="container">
-    <strong>¡Bienvenido a nuestra tienda!</strong>
-    <p>Explora nuestro catálogo de productos</p>
-    
-    <ion-button expand="block" 
-                routerLink="/product-catalog" 
-                class="ion-margin">
-      Ver Catálogo
-    </ion-button>
+  <div class="page-title">
+    Catálogo de Productos
+  </div>
+  <div class="filters">
+    <select>
+      <option value="">Categorías</option>
+      <option value="shampoos">Shampoos</option>
+      <option value="acondicionadores">Acondicionadores</option>
+    </select>
+    <select>
+      <option value="">Ordenar por</option>
+      <option value="price-asc">Precio: menor a mayor</option>
+      <option value="price-desc">Precio: mayor a menor</option>
+    </select>
+  </div>
+  <div class="product-grid">
+    <div class="product-card" *ngFor="let product of products">
+      <img [src]="product.image_url" alt="{{product.name}}">
+      <div class="product-name">{{product.name}}</div>
+      <div class="product-price">{{product.price | currency}}</div>
+      <ion-button expand="block" (click)="addToCart(product)">Añadir al carrito</ion-button>
+    </div>
   </div>
 </ion-content>
+
+<ion-footer>
+  <div class="footer">
+    <div class="footer-links">
+      <a href="#">Políticas de Privacidad</a>
+      <a href="#">Términos y Condiciones</a>
+    </div>
+    <div class="footer-contact">
+      <p>Contacto:  | Tel: 123-456-7890</p>
+    </div>
+  </div>
+</ion-footer>

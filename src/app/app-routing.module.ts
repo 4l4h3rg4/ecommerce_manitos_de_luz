@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
+import { ProductDetailsComponent } from './product-details/product-details.component';
 
 const routes: Routes = [
   {
@@ -17,8 +18,8 @@ const routes: Routes = [
     loadChildren: () => import('./product-catalog/product-catalog.module').then( m => m.ProductCatalogPageModule)
   },
   {
-    path: 'product',
-    loadChildren: () => import('./product/product.module').then( m => m.ProductPageModule)
+    path: 'products/:productName',
+    component: ProductDetailsComponent
   },
   {
     path: 'shopping-cart',

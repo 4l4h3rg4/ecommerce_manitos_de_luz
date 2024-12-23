@@ -11,6 +11,7 @@ export class SupabaseService {
   private supabase: SupabaseClient;
   private productsSubject = new Subject<void>();
   private urlCache = new Map<string, string>();
+  private storageUrl = 'https://lnhbnqacxsyqmlonfldv.supabase.co/storage/v1/object/public/products/';
 
   constructor() {
     this.supabase = createClient(
@@ -22,11 +23,37 @@ export class SupabaseService {
   async getProducts(): Promise<Product[]> {
     const { data, error } = await this.supabase
       .from('products')
-      .select('*')
-      .order('created_at', { ascending: false });
+      .select('id, name, price, description, image_url, stock');
 
-    if (error) throw error;
-    return data || [];
+    if (error) {
+      console.error('Error fetching products:', error);
+      return [];
+    }
+
+    // Construir la URL completa de las imágenes
+    return data.map(product => ({
+      ...product,
+      image_url: this.storageUrl + product.image_url
+    })) as Product[];
+  }
+
+  async getProductByName(name: string): Promise<Product> {
+    const { data, error } = await this.supabase
+      .from('products')
+      .select('id, name, price, description, image_url, stock')
+      .eq('name', name)
+      .single();
+
+    if (error) {
+      console.error('Error al obtener el producto:', error);
+      throw error;
+    }
+
+    // Construir la URL completa de la imagen
+    return {
+      ...data,
+      image_url: this.storageUrl + data.image_url
+    } as Product;
   }
 
   getProductImageUrl(fileName: string): string {
@@ -153,4 +180,35 @@ export class SupabaseService {
     console.log('URL pública generada:', data.publicUrl);
     return data.publicUrl || 'assets/default-product.png';
   }
-} 
+
+  async addProductWithImages(product: Product, imageUrls: string[]): Promise<void> {
+    try {
+      // Guardar el producto principal
+      const { data: newProduct, error: productError } = await this.supabase
+      .from('products')
+      .insert([{ name: product.name, description: product.description, price: product.price }])
+      .select()
+      .single();
+
+      if (newProduct) {
+        const imagesData = imageUrls.map((url) => ({
+          product_id: newProduct.id,
+          image_url: url,
+        }));
+      }
+
+      // Guardar las imágenes relacionadas
+      const imagesData = imageUrls.map((url) => ({ product_id: newProduct.id, image_url: url }));
+      const { error: imagesError } = await this.supabase
+        .from('product_images')
+        .insert(imagesData);
+  
+      if (imagesError) throw imagesError;
+  
+      console.log('Producto e imágenes guardados exitosamente.');
+    } catch (error: any) {
+      console.error('Error al guardar el producto:', error.message);
+      throw error;
+    }
+  }
+}
